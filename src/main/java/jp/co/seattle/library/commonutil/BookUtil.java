@@ -17,6 +17,7 @@ public class BookUtil {
 	private static final String REQUIRED_ERROR = "未入力の必須項目があります";
 	private static final String ISBN_ERROR = "ISBNの桁数または半角数字が正しくありません";
 	private static final String PUBLISHDATE_ERROR = "出版日は半角数字のYYYYMMDD形式で入力してください";
+	private static BookDetailsInfo bookInfo;
 
 	/**
 	 * 登録前のバリデーションチェック
@@ -25,17 +26,25 @@ public class BookUtil {
 	 * @return errorList エラーメッセージのリスト
 	 */
 	public List<String> checkBookInfo(BookDetailsInfo bookInfo) {
-		
+
 		//TODO　各チェックNGの場合はエラーメッセージをリストに追加（タスク４）
 		List<String> errorList = new ArrayList<>();
 		// 必須チェック
 
-		
+		if (!(isEmptyBookInfo(bookInfo))) {
+			errorList.add(REQUIRED_ERROR);
+		}
+
 		// ISBNのバリデーションチェック
 
-
+		if (!(isValidIsbn(bookInfo.getIsbn()))) {
+			errorList.add(ISBN_ERROR);
+		}
 		// 出版日の形式チェック
 
+		if (!(checkDate(bookInfo.getPublishDate()))) {
+			errorList.add(PUBLISHDATE_ERROR);
+		}
 
 		return errorList;
 	}
@@ -51,7 +60,8 @@ public class BookUtil {
 			DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			formatter.setLenient(false); // ←これで厳密にチェックしてくれるようになる
 			//TODO　取得した日付の形式が正しければtrue（タスク４）
-			
+			formatter.parse(publishDate);
+
 			return true;
 		} catch (Exception p) {
 			p.printStackTrace();
@@ -67,8 +77,16 @@ public class BookUtil {
 	 */
 	private static boolean isValidIsbn(String isbn) {
 		//TODO　ISBNが半角数字で10文字か13文字であればtrue（タスク４）
-		
-		return true;
+		if (!isbn.isEmpty()) {
+			if (!(isbn.length() == 10 || isbn.length() == 13) && isbn.matches("^[0-9]+$")) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+
 	}
 
 	/**
@@ -79,7 +97,12 @@ public class BookUtil {
 	 */
 	private static boolean isEmptyBookInfo(BookDetailsInfo bookInfo) {
 		//TODO　タイトル、著者、出版社、出版日のどれか一つでもなかったらtrue（タスク４）
-		
-		return true;
+		if (!(bookInfo.getTitle().isEmpty()) && !(bookInfo.getAuthor().isEmpty())
+				&& !(bookInfo.getPublisher().isEmpty()) && !(bookInfo.getPublishDate().isEmpty())) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 }
