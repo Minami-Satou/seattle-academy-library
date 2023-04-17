@@ -63,10 +63,10 @@ public class BookUtil {
 			//TODO　取得した日付の形式が正しければtrue（タスク４）
 			formatter.parse(publishDate);
 
-			return false;
+			return true;
 		} catch (Exception p) {
 			p.printStackTrace();
-			return true;
+			return false;
 		}
 	}
 
