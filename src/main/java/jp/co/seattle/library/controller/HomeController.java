@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jp.co.seattle.library.dto.BookInfo;
 import jp.co.seattle.library.service.BooksService;
 
-
-
 /**
  * Handles requests for the application home page.
  */
@@ -34,10 +32,11 @@ public class HomeController {
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String transitionHome(Model model) {
 		//書籍の一覧情報を取得（タスク３）
-
+		
 		List<BookInfo> book = booksService.getBookList();
 		model.addAttribute("bookList", book);
 		return "home";
+		
 	}
 
 }
