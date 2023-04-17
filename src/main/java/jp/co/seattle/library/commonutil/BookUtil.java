@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import jp.co.seattle.library.dto.BookDetailsInfo;
 
@@ -17,6 +18,7 @@ public class BookUtil {
 	private static final String REQUIRED_ERROR = "未入力の必須項目があります";
 	private static final String ISBN_ERROR = "ISBNの桁数または半角数字が正しくありません";
 	private static final String PUBLISHDATE_ERROR = "出版日は半角数字のYYYYMMDD形式で入力してください";
+	private static BookDetailsInfo bookInfo;
 
 	/**
 	 * 登録前のバリデーションチェック
@@ -25,17 +27,25 @@ public class BookUtil {
 	 * @return errorList エラーメッセージのリスト
 	 */
 	public List<String> checkBookInfo(BookDetailsInfo bookInfo) {
-		
+
 		//TODO　各チェックNGの場合はエラーメッセージをリストに追加（タスク４）
 		List<String> errorList = new ArrayList<>();
 		// 必須チェック
 
-		
+		if (isEmptyBookInfo(bookInfo) == false) {
+			errorList.add(REQUIRED_ERROR);
+		}
+
 		// ISBNのバリデーションチェック
 
-
+		if (isValidIsbn(bookInfo.getIsbn())== false) {
+			errorList.add(ISBN_ERROR);
+		}
 		// 出版日の形式チェック
 
+		if (checkDate(bookInfo.getPublishDate())== false) {
+			errorList.add(PUBLISHDATE_ERROR);
+		}
 
 		return errorList;
 	}
@@ -51,7 +61,8 @@ public class BookUtil {
 			DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			formatter.setLenient(false); // ←これで厳密にチェックしてくれるようになる
 			//TODO　取得した日付の形式が正しければtrue（タスク４）
-			
+			formatter.parse(publishDate);
+
 			return true;
 		} catch (Exception p) {
 			p.printStackTrace();
@@ -67,9 +78,22 @@ public class BookUtil {
 	 */
 	private static boolean isValidIsbn(String isbn) {
 		//TODO　ISBNが半角数字で10文字か13文字であればtrue（タスク４）
+		if(isbn.length() > 0) {
+			if((bookInfo.getIsbn()).matches("^[0-9]$")) {
+				if(bookInfo.getIsbn().length() == 10 || bookInfo.getIsbn().length() == 13) {
+						return false;
+				}else {
+					return true;
+				}
+			}else {
+				return true;
+			}
+		}else {
+			return true;
+		}
 		
-		return true;
 	}
+	
 
 	/**
 	 * 必須項目の存在チェック
@@ -79,7 +103,13 @@ public class BookUtil {
 	 */
 	private static boolean isEmptyBookInfo(BookDetailsInfo bookInfo) {
 		//TODO　タイトル、著者、出版社、出版日のどれか一つでもなかったらtrue（タスク４）
-		
-		return true;
+		if (StringUtils.isEmpty(bookInfo.getTitle()) && StringUtils.isEmpty(bookInfo.getAuthor())
+				&& StringUtils.isEmpty(bookInfo.getPublisher()) && StringUtils.isEmpty(bookInfo.getPublishDate())) {
+			return false;
+		} else {
+			return true;
+		}
+
 	}
+
 }
