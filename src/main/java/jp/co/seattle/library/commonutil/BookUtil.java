@@ -43,7 +43,7 @@ public class BookUtil {
 		}
 		// 出版日の形式チェック
 
-		if (checkDate(bookInfo.getPublishDate())) {
+		if (checkDate(bookInfo.getPublishDate()) == false) {
 			errorList.add(PUBLISHDATE_ERROR);
 		}
 
@@ -64,13 +64,13 @@ public class BookUtil {
 			Date date = formatter.parse(publishDate);
 			String str = formatter.format(date);
 			
-			publishDate.equals(str);
-			
-			return false;
+			return publishDate.equals(str);
 			
 		}catch (Exception p) {
 				   p.printStackTrace();
-				   return true;
+				   return false;
+						   
+						   
 		}
 	}
 
