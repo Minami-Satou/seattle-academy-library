@@ -51,5 +51,26 @@ public class UsersService {
 			return null;
 		}
 	}
+	
+
+	//パスワードリセット
+	public UserInfo resetUser(UserInfo userInfo) {
+
+		// SQL生成
+		String sql = "UPDATE users SET (email,password,passwordCheck,upd_data) = (?,?,?,now())  WHERE id = ? ;";
+		jdbcTemplate.update(spl,UserInfo.getEmail(),UserInfo.getPassword(),UserInfo.getPasswordCheck());
+		
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
